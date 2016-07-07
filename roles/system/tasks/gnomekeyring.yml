@@ -1,0 +1,21 @@
+---
+- name: Check for ssh and gpg GNOME Keyring desktop files
+  stat:  
+    path: "/etc/xdg/autostart/gnome-keyring-{{item}}.desktop"
+  with_items:
+      - ssh
+      - pkcs11
+  register: keyringitems
+- name: Disable GNOME Keyring for ssh and gpg
+  copy:  
+    remote_src: True
+    src: "{{item.stat.path}}"
+    dest: "{{item.stat.path}}.disabled"
+  with_items: "{{keyringitems.results}}"
+  when: item.stat.exists
+- file:  
+    path: "{{item.stat.path}}"
+    state: absent
+  with_items: "{{keyringitems.results}}"
+  when: item.stat.exists
+

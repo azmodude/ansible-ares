@@ -1,0 +1,57 @@
+---
+- name: Set Timezone and enable NTP
+  hosts: local
+  connection: local
+  roles:
+    - azmodude.timezone
+  become: yes
+
+- name: Install packages
+  hosts: local
+  connection: local
+  vars:
+    - fedora_current: 24
+  roles:
+    - packages
+  tags:
+    - packages
+  become: yes
+
+- name: Configure base system
+  hosts: local
+  connection: local
+  roles:
+    - system
+  tags:
+    - system
+  become: yes
+
+- name: Install TLP
+  hosts: local
+  connection: local
+  roles:
+    - tlp
+  tags:
+    - tlp
+    - packages
+  become: yes
+
+- name: Install syncthing
+  hosts: local
+  connection: local
+  roles:
+    - azmodude.syncthing
+  tags:
+    - syncthing
+    - packages
+  become: yes
+
+- name: Install pyenv
+  hosts: local
+  connection: local
+  roles:
+    - azmodude.pyenv
+  tags:
+    - pyenv
+    - packages
+  become: no

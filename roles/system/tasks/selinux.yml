@@ -1,0 +1,10 @@
+---
+# ignore errors because ansible barfs when trying to disable a disabled SELinux
+- name: Disable SELinux
+  selinux: state=disabled
+  ignore_errors: True
+- name: Setenforce to 0, prior disablement fires only after reboot
+  command: /usr/sbin/setenforce 0
+  changed_when: False
+  ignore_errors: True
+

@@ -1,0 +1,29 @@
+---
+- include: selinux.yml
+- include: gnomekeyring.yml
+- include: discards.yml
+
+- name: Template smb.conf for Samba
+  template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    backup: yes
+  notify:
+    - Reload samba
+
+- include: services.yml
+
+- name: Configure firewalld
+  firewalld:
+    service: "{{item}}"
+    permanent: True
+    state: enabled
+  with_items:
+    - samba
+    - samba-client
+    - tinc
+    - dropbox-lansync
+    - mosh
+    - ssh
+    - mdns
+  notify: Reload firewalld

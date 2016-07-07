@@ -1,0 +1,35 @@
+---
+- name: Enable TLP Repository
+  dnf: 
+    name: "http://repo.linrunner.de/fedora/tlp/repos/releases/tlp-release-1.0-0.noarch.rpm" 
+    state: present
+- name: Install TLP
+  dnf: 
+    name: "{{ item }}" 
+    state: present
+    enablerepo: tlp-updates-testing
+  with_items:
+    - kernel-devel
+    - tlp
+    - tlp-rdw
+    - akmod-acpi_call
+    - akmod-tp_smapi
+  register: install
+- name: Mask systemd-rfkill
+  shell: systemctl mask systemd-rfkill.service 
+  changed_when: False
+- name: Template TLP configuration
+  template:
+    src: tlp.j2
+    dest: /etc/default/tlp
+    backup: yes
+  notify: Restart TLP 
+- name: Enable and start TLP
+  service: 
+    name: tlp
+    state: started 
+    enabled: yes
+- name: Enable tlp-sleep
+  service: 
+    name: tlp-sleep
+    enabled: yes

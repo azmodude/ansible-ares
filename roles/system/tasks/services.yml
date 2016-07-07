@@ -1,0 +1,34 @@
+---
+- name: Enable and start firewalld
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+- name: Enable and start sshd
+  service: 
+    name: sshd 
+    state: started 
+    enabled: yes
+- name: Enable and start docker
+  service: 
+    name: docker 
+    state: started 
+    enabled: yes
+- name: Enable and start libvirtd
+  service: 
+    name: libvirtd 
+    state: started 
+    enabled: yes
+- block:
+  - name: Enable and start samba
+    service: 
+      name: smb 
+      state: started 
+      enabled: yes
+  - debug: 
+      msg: "No samba users are created, use sudo pdbedit -a -u <user>"
+- name: Enable and start fstrim timer
+  service: 
+    name: fstrim.timer 
+    state: started 
+    enabled: yes
