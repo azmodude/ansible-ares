@@ -1,0 +1,128 @@
+---
+user_packages_cli:
+  - perl-Image-ExifTool
+  - ImageMagick
+  - awscli
+  - vim
+  - neovim
+  - mc
+  - pandoc
+  - tomb
+  - tmux
+  - rofi
+  - pass
+  - keychain
+  - zsh
+  - neomutt
+  - powertop
+  - the_silver_searcher
+  - fasd
+  - htop
+  - elinks
+  - xsel
+  - xdotool
+  - catdoc
+  - dropbox
+
+user_packages_gui:
+  - nautilus-dropbox
+  - thunderbird
+  - gimp
+  - xsane
+  - hplip-gui
+  - google-chrome-beta
+  - beesu
+  - zathura
+  - zathura-plugins-all
+  - winswitch
+  - freetype-freeworld
+  - gnome-tweak-tool
+  - google-noto-sans-fonts
+  - google-noto-serif-fonts
+  - adobe-source-code-pro-fonts
+  - adobe-source-sans-pro-fonts
+  - fontawesome-fonts
+  - gnome-shell-extension-gpaste
+  - gnome-shell-extension-drive-menu
+  - gnome-shell-extension-places-menu
+  - gnome-shell-extension-openweather
+  - gnome-shell-extension-windowsNavigator
+  - gnome-shell-extension-native-window-placement
+  - arc-theme
+  - moka-icon-theme
+
+system_packages:
+  - dnf-plugins-extras
+  - python3-dnf-plugins-extras-show-leaves
+  - docker
+  - samba
+  - postfix
+  - libvirt
+  - tinc
+  - hplip
+  - virt-manager
+  - smartmontools
+
+development_packages:
+  - gcc
+  - gcc-c++
+  - git
+  - git-extras
+  - openssl-devel
+  - cmake
+  - golang
+  - golang-bin
+  - python-devel
+  - python3-devel
+  - ctags
+  - ruby
+  - ruby-devel
+  - nodejs
+  # neovim
+  - python2-greenlet-devel
+  - python-neovim
+  - python3-neovim
+  - python-neovim-gui
+  - python3-neovim-gui
+  - ncurses-compat-libs
+  # /neovim
+  - python-firewall
+  - python3-firewall
+  - python-pip
+  - python3-pip
+  - perl
+  - perl-open
+  - expect
+  - ansible-lint
+  - java-1.8.0-openjdk
+  # borgbackup
+  - lz4-devel
+  - libacl-devel
+  # /borgbackup
+  - vagrant
+  - vagrant-libvirt
+  - vagrant-lxc
+  - lxc
+  - lxc-templates
+  - lxc-extra
+  - debootstrap
+  - ShellCheck
+  - python3-doit
+  - python-doit
+
+npm_modules:
+  - diff-so-fancy
+
+ruby_gems:
+  - overcommit
+
+pip_modules:
+  - bumpversion
+  - cookiecutter
+  - borgbackup
+
+go:
+  binaries:
+    - { name: 'gcsfuse', url: 'github.com/googlecloudplatform/gcsfuse' }
+    - { name: 'gocryptfs', url: 'github.com/rfjakob/gocryptfs' }
+  path: "/home/{{ local_user }}/go"

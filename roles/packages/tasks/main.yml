@@ -6,122 +6,70 @@
     line: 'fastestmirror=1'
     backup: yes
 
-- name: Install packages (User)
+- name: Install packages
   dnf:
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
   with_items:
-    - awscli
-    - tinc
-    - vim
-    - mc
-    - docker
-    - pandoc
-    - tomb
-    - tmux
-    - hplip
-    - hplip-gui
-    - libvirt
-    - virt-manager
-    - samba
-    - rofi
-    - pass
-    - keychain
-    - zsh
-    - google-chrome-beta
-    - beesu
-    - zathura
-    - zathura-plugins-all
-    - neomutt
-    - neovim
-    - isync
-    - notmuch
-    - winswitch
-    - powertop
-    - smartmontools
-    - the_silver_searcher
-    - freetype-freeworld
-    - gnome-tweak-tool
-    - fasd
-    - htop
-    - elinks
-    - google-noto-sans-fonts
-    - google-noto-serif-fonts
-    - adobe-source-code-pro-fonts
-    - adobe-source-sans-pro-fonts
-    - gnome-shell-extension-gpaste
-    - gnome-shell-extension-drive-menu
-    - gnome-shell-extension-places-menu
-    - gnome-shell-extension-openweather
-    - gnome-shell-extension-windowsNavigator
-    - gnome-shell-extension-native-window-placement
-    - xsel
-    - xdotool
+    - "{{ user_packages_cli }}"
+    - "{{ user_packages_gui }}"
+    - "{{ system_packages }}"
+    - "{{ development_packages }}"
 
 - name: Install the 'Development tools' package group
   dnf:
     name: "@Development tools"
     state: present
 
-- name: Install packages (Development)
-  dnf:
-    name: "{{item}}"
-    state: present
-  with_items:
-    - gcc
-    - gcc-c++
-    - openssl-devel
-    - cmake
-    - golang
-    - golang-bin
-    - python-devel
-    - python3-devel
-    - ctags
-    - ruby
-    - ruby-devel
-    - nodejs
-    # neovim
-    - python2-greenlet-devel
-    - python-neovim
-    - python3-neovim
-    - python-neovim-gui
-    - python3-neovim-gui
-    - ncurses-compat-libs
-    # /neovim
-    - python-firewall
-    - python3-firewall
-    - python-pip
-    - python3-pip
-    - perl
-    - perl-open
-    - expect
-    - ansible-lint
-    - java-1.8.0-openjdk
 
 - name: Install npm modules
   npm:
-    name: "{{item}}"
+    name: "{{ item }}"
     global: True
     state: present
   with_items:
-    - diff-so-fancy
+    - "{{ npm_modules }}"
 
 - name: Install ruby gems
   gem:
-    name: "{{item}}"
+    name: "{{ item  }}"
     state: present
     user_install: True
   with_items:
-    - overcommit
+    - "{{ ruby_gems }}"
   become: yes
-  become_user: "{{local_user}}"
+  become_user: "{{ local_user }}"
 
 - name: Install python modules
   pip:
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
     extra_args: '--user'
+    executable: 'pip3'
   with_items:
-    - bumpversion
+    - "{{ pip_modules }}"
   become: yes
-  become_user: "{{local_user}}"
+  become_user: "{{ local_user }}"
+
+- name: Check for go binaries
+  stat:
+    # this is not optimal, but unfortunately ansible (still) does not switch
+    # env context for the become_user
+    path: "{{ go.path }}/{{ item.name }}"
+  with_items: "{{go.binaries}}"
+  register: gobinaries_installed
+  become: yes
+  become_user: "{{ local_user }}"
+
+- name: Install missing go binaries
+  command: go get {{ item[0].url }}
+  args:
+    creates: "/home/{{ local_user }}/go/bin/{{ item[0].name }}"
+  environment:
+    GOPATH: "{{ go.path }}"
+  with_nested:
+    - "{{ go.binaries }}"
+    - "{{ gobinaries_installed.results }}"
+  when: not item[1].stat.exists
+  become: yes
+  become_user: "{{ local_user }}"

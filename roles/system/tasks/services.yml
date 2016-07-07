@@ -5,30 +5,35 @@
     state: started
     enabled: yes
 - name: Enable and start sshd
-  service: 
-    name: sshd 
-    state: started 
+  service:
+    name: sshd
+    state: started
     enabled: yes
 - name: Enable and start docker
-  service: 
-    name: docker 
-    state: started 
+  service:
+    name: docker
+    state: started
     enabled: yes
 - name: Enable and start libvirtd
-  service: 
-    name: libvirtd 
-    state: started 
+  service:
+    name: libvirtd
+    state: started
+    enabled: yes
+- name: Enable and start lxc
+  service:
+    name: lxc
+    state: started
     enabled: yes
 - block:
   - name: Enable and start samba
-    service: 
-      name: smb 
-      state: started 
+    service:
+      name: smb
+      state: started
       enabled: yes
-  - debug: 
+  - debug:
       msg: "No samba users are created, use sudo pdbedit -a -u <user>"
 - name: Enable and start fstrim timer
-  service: 
-    name: fstrim.timer 
-    state: started 
+  service:
+    name: fstrim.timer
+    state: started
     enabled: yes
