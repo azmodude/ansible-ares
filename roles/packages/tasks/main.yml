@@ -96,6 +96,7 @@
     - perl-open
     - expect
     - ansible-lint
+    - java-1.8.0-openjdk
 
 - name: Install npm modules
   npm:
