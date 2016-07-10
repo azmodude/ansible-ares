@@ -1,9 +1,9 @@
 ---
 - name: Enable LVM discards
-  replace: 
-    dest: /etc/lvm/lvm.conf 
-    regexp: '^(\s*issue_discards) = 0' 
-    replace: '\1 = 1' 
+  replace:
+    dest: /etc/lvm/lvm.conf
+    regexp: '^(\s*issue_discards) = 0'
+    replace: '\1 = 1'
     backup: yes
 - name: Check whether discards is in grub default options
   command: grep rd\.luks\.options=discard /etc/default/grub
@@ -14,17 +14,17 @@
   - name: Set discards option for currently installed grub
     shell: grubby --update-kernel=ALL --args=rd.luks.options=discard
   - name: Set discards as default option for grub
-    replace: 
-      dest: /etc/default/grub 
-      regexp: '^(GRUB_CMDLINE_LINUX=")(.*)' 
-      replace: '\1rd.luks.options=discard \2' 
+    replace:
+      dest: /etc/default/grub
+      regexp: '^(GRUB_CMDLINE_LINUX=")(.*)'
+      replace: '\1rd.luks.options=discard \2'
       backup: yes
   when: grub|failed
 - name: Set discard option in /etc/crypttab
-  replace: 
-    dest: /etc/crypttab 
-    regexp: '^(luks.*none)\s*$' 
-    replace: '\1 discard' 
+  replace:
+    dest: /etc/crypttab
+    regexp: '^(luks.*none)\s*$'
+    replace: '\1 discard'
     backup: yes
   register: crypttab
 - name: Regenerate dracut image

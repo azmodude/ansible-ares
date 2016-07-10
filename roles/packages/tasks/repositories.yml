@@ -6,7 +6,6 @@
   with_items:
     - http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ fedora_current }}.noarch.rpm
     - http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ fedora_current }}.noarch.rpm
-  become: yes
 
 - name: Enable copr repositories
   yum_repository:
@@ -16,30 +15,16 @@
     gpgkey: https://copr-be.cloud.fedoraproject.org/results/{{item.urlpath}}/pubkey.gpg
     gpgcheck: yes
     skip_if_unavailable: True
-  become: yes
   with_items:
-    - { name: "_copr_fabio-git", description: "copr/fabio-git", urlpath: "fabio/git" }
-    - { name: "_copr_azmo-tomb", description: "copr/azmo-Tomb", urlpath: "azmo/Tomb" }
-    - { name: "_copr_region51-rofi", description: "copr/region51-rofi", urlpath: "region51/rofi" }
-    - { name: "_copr_flatcap-neomutt", description: "copr/flatcap-neomutt", urlpath: "flatcap/neomutt" }
-    - { name: "_copr_dperson-neovim-head", description: copr/dperson-neovim-head", urlpath: "dperson/neovim-head" }
+    - "{{ coprs }}"
 
-- name: Enable Google Chrome Beta repository
+- name: Enable extra repositories
   yum_repository:
-    name: google-chrome-beta
-    description: Google Chrome Beta Repository
-    baseurl: http://dl.google.com/linux/chrome/rpm/stable/x86_64
-    gpgcheck: yes
-    gpgkey: https://dl.google.com/linux/linux_signing_key.pub
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    baseurl: "{{ item.baseurl }}"
+    gpgcheck: "{{ item.gpgcheck }}"
+    gpgkey: "{{ item.gpgkey }}"
     skip_if_unavailable: True
-  become: True
-
-- name: Enable Winswitch repository
-  yum_repository:
-    name: xpra-winswitch
-    description: XPRA Winswitch Repository
-    baseurl: https://winswitch.org/dists/Fedora/$releasever/$basearch/
-    gpgcheck: yes
-    gpgkey: https://winswitch.org/gpg.asc
-    skip_if_unavailable: True
-  become: True
+  with_items:
+    - "{{ repositories }}"
