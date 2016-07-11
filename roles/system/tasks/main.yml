@@ -11,7 +11,27 @@
   notify:
     - Reload samba
 
+- name: Template main.cf for postfix (additional commands in there)
+  template:
+    src: postfix.main.cf.j2
+    dest: /etc/postfix/main.cf
+    backup: yes
+  notify:
+    - Reload postfix
+
+- name: Template btrfs-scrub@ timers and service files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    backup: yes
+  with_items:
+    - { src: btrfs-scrub@.service.j2, dest: /etc/systemd/system/btrfs-scrub@.service }
+    - { src: btrfs-scrub@.timer.j2, dest: /etc/systemd/system/btrfs-scrub@.timer }
+  notify:
+    Reload systemd
+
 - include: services.yml
+
 
 - name: Configure firewalld
   firewalld:
