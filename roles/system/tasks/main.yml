@@ -1,7 +1,7 @@
 ---
 - include: selinux.yml
 - include: gnomekeyring.yml
-- include: discards.yml
+- include: discards_resume.yml
 
 - name: Template smb.conf for Samba
   template:

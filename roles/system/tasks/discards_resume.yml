@@ -7,7 +7,7 @@
     backup: yes
 - name: Check whether discards is in grub default options
   command: grep rd\.luks\.options=discard /etc/default/grub
-  register: grub
+  register: grub_discards
   ignore_errors: True
   changed_when: False
 - block:
@@ -19,7 +19,7 @@
       regexp: '^(GRUB_CMDLINE_LINUX=")(.*)'
       replace: '\1rd.luks.options=discard \2'
       backup: yes
-  when: grub|failed
+  when: grub_discards|failed
 - name: Set discard option in /etc/crypttab
   replace:
     dest: /etc/crypttab
@@ -30,3 +30,26 @@
 - name: Regenerate dracut image
   shell: dracut -f
   when: crypttab|changed
+
+- name: Get swap partition uuid
+  shell: blkid | grep swap | sed -r 's/.*UUID="([0-9a-f\-]+)".*/\1/'
+  register: swap_uuid
+  ignore_errors: True
+  changed_when: False
+
+- name: Check whether resume=UUID is in grub default options
+  command: grep resume=UUID={{ swap_uuid.stdout }} /etc/default/grub
+  register: grub_resume
+  ignore_errors: True
+  changed_when: False
+
+- block:
+  - name: Set swap partition as resume for currently installed grub
+    shell: grubby --update-kernel=ALL --args=resume=UUID={{ swap_uuid.stdout}}
+  - name: Set swap partition as resume UUID for grub
+    replace:
+      dest: /etc/default/grub
+      regexp: '^(GRUB_CMDLINE_LINUX=")(.*)'
+      replace: '\1resume=UUID={{ swap_uuid.stdout }} \2'
+      backup: yes
+  when: grub_resume|failed
