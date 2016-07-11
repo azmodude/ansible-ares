@@ -23,6 +23,9 @@ user_packages_cli:
   - xdotool
   - catdoc
   - dropbox
+  - ffmpeg
+  - x264
+  - task
 
 user_packages_gui:
   - nautilus-dropbox
@@ -50,6 +53,7 @@ user_packages_gui:
   - gnome-shell-extension-native-window-placement
   - arc-theme
   - moka-icon-theme
+  - git-cola
 
 system_packages:
   - dnf-plugins-extras
@@ -133,7 +137,7 @@ coprs:
   - { name: "_copr_azmo-tomb", description: "copr/azmo-Tomb", urlpath: "azmo/Tomb" }
   - { name: "_copr_region51-rofi", description: "copr/region51-rofi", urlpath: "region51/rofi" }
   - { name: "_copr_flatcap-neomutt", description: "copr/flatcap-neomutt", urlpath: "flatcap/neomutt" }
-  - { name: "_copr_dperson-neovim-head", description: copr/dperson-neovim-head", urlpath: "dperson/neovim-head" }
+  - { name: "_copr_dperson-neovim-head", description: "copr/dperson-neovim-head", urlpath: "dperson/neovim-head" }
 
 repositories:
   - { name: "google-chrome-beta", description: "Google Chrome Beta Repository", baseurl: "http://dl.google.com/linux/chrome/rpm/stable/x86_64", gpgcheck: yes, gpgkey: "https://dl.google.com/linux/linux_signing_key.pub" }
